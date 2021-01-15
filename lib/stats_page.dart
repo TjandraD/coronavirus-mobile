@@ -7,6 +7,8 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
+  String dropdownValue = 'Indonesia';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +33,45 @@ class _StatsPageState extends State<StatsPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    StatsColumn(),
+                    StatsColumn(
+                      columnTextAlignment: CrossAxisAlignment.start,
+                    ),
                     Image.asset(
                       'assets/img/globe.png',
                       height: 200,
+                    ),
+                  ],
+                ),
+                Divider(
+                  height: 20,
+                  thickness: 2,
+                ),
+                DropdownButton<String>(
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  onChanged: (String newValue) {
+                    setState(() {
+                      dropdownValue = newValue;
+                    });
+                  },
+                  items: <String>['Indonesia', 'USA', 'Singapore', 'English']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'assets/img/flag.png',
+                      height: 200,
+                    ),
+                    StatsColumn(
+                      columnTextAlignment: CrossAxisAlignment.end,
                     ),
                   ],
                 ),
@@ -48,10 +85,14 @@ class _StatsPageState extends State<StatsPage> {
 }
 
 class StatsColumn extends StatelessWidget {
+  final CrossAxisAlignment columnTextAlignment;
+
+  StatsColumn({@required this.columnTextAlignment});
+
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: columnTextAlignment,
       children: [
         Text(
           'Confirmed',
