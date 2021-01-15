@@ -1,3 +1,4 @@
+import 'package:covid19_stats/constants.dart';
 import 'package:flutter/material.dart';
 
 class StatsPage extends StatefulWidget {
@@ -18,6 +19,62 @@ class _StatsPageState extends State<StatsPage> {
           ),
         ),
       ),
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 16.0,
+            horizontal: 24.0,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                StatsColumn(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class StatsColumn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Confirmed',
+          style: kStatsTitleStyle,
+        ),
+        Text(
+          '92.291.033',
+          style: kStatsConfirmedStyle,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Deaths',
+          style: kStatsTitleStyle,
+        ),
+        Text(
+          '1.976.509',
+          style: kStatsDeathsStyle,
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Recovered',
+          style: kStatsTitleStyle,
+        ),
+        Text(
+          '50.947.389',
+          style: kStatsRecoveredStyle,
+        ),
+      ],
     );
   }
 }
