@@ -26,4 +26,4 @@ flutter:
   fonts:
     - family: Oxygen
       fonts:
-        - asset: fonts/Oxygen.ttf
+        - asset: assets/fonts/Oxygen.ttf
