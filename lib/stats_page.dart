@@ -8,6 +8,16 @@ class StatsPage extends StatefulWidget {
 class _StatsPageState extends State<StatsPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xFF616161),
+        title: Text(
+          'COVID-19 Stats',
+          style: TextStyle(
+            fontFamily: 'Oxygen',
+          ),
+        ),
+      ),
+    );
   }
 }
