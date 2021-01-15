@@ -28,7 +28,16 @@ class _StatsPageState extends State<StatsPage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                StatsColumn(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StatsColumn(),
+                    Image.asset(
+                      'assets/img/globe.png',
+                      height: 200,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
