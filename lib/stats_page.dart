@@ -9,9 +9,8 @@ class StatsPage extends StatefulWidget {
 }
 
 class _StatsPageState extends State<StatsPage> {
-  String dropdownValue = 'Indonesia';
+  String pickedCountryCode = 'ID';
   ApiHelper apiHelper = ApiHelper();
-  Map globalData;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +32,11 @@ class _StatsPageState extends State<StatsPage> {
           ),
           child: FutureBuilder(
               future: apiHelper.getGlobalData(),
-              builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
                 Widget mainWidget;
                 if (snapshot.hasData) {
-                  globalData = snapshot.data;
+                  Map globalData = snapshot.data['globalData'];
+                  List<dynamic> countriesList = snapshot.data['countriesList'];
                   mainWidget = SingleChildScrollView(
                     child: Column(
                       children: [
@@ -58,39 +58,71 @@ class _StatsPageState extends State<StatsPage> {
                           thickness: 2,
                         ),
                         DropdownButton<String>(
-                          value: dropdownValue,
+                          value: pickedCountryCode,
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           onChanged: (String newValue) {
                             setState(() {
-                              dropdownValue = newValue;
+                              pickedCountryCode = newValue;
                             });
                           },
-                          items: <String>[
-                            'Indonesia',
-                            'USA',
-                            'Singapore',
-                            'English'
-                          ].map<DropdownMenuItem<String>>((String value) {
+                          items: countriesList
+                              .map<DropdownMenuItem<String>>((country) {
                             return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
+                              value: country['iso2'],
+                              child: Text(country['name']),
                             );
                           }).toList(),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                              'assets/img/flag.png',
-                              height: 200,
-                            ),
-                            StatsColumn(
-                              columnTextAlignment: CrossAxisAlignment.end,
-                              statsData: globalData,
-                            ),
-                          ],
-                        ),
+                        FutureBuilder(
+                          future: apiHelper.getCountriesData(pickedCountryCode),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            Map countryData = snapshot.data;
+                            Widget bottomWidget;
+
+                            if (snapshot.hasData) {
+                              bottomWidget = Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Image.asset(
+                                    'assets/img/flag.png',
+                                    height: 200,
+                                  ),
+                                  StatsColumn(
+                                    columnTextAlignment: CrossAxisAlignment.end,
+                                    statsData: countryData,
+                                  ),
+                                ],
+                              );
+                            } else if (snapshot.hasError) {
+                              bottomWidget = Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline,
+                                      color: Colors.red,
+                                      size: 60,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text('Error: ${snapshot.error}'),
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            return bottomWidget;
+                          },
+                        )
                       ],
                     ),
                   );
