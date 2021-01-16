@@ -1,3 +1,4 @@
+import 'package:covid19_stats/api_helper.dart';
 import 'package:covid19_stats/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,8 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> {
   String dropdownValue = 'Indonesia';
+  ApiHelper apiHelper = ApiHelper();
+  Map globalData;
 
   @override
   Widget build(BuildContext context) {
@@ -27,57 +30,95 @@ class _StatsPageState extends State<StatsPage> {
             vertical: 16.0,
             horizontal: 24.0,
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    StatsColumn(
-                      columnTextAlignment: CrossAxisAlignment.start,
+          child: FutureBuilder(
+              future: apiHelper.getGlobalData(),
+              builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
+                Widget mainWidget;
+                if (snapshot.hasData) {
+                  globalData = snapshot.data;
+                  mainWidget = SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            StatsColumn(
+                              columnTextAlignment: CrossAxisAlignment.start,
+                              statsData: globalData,
+                            ),
+                            Image.asset(
+                              'assets/img/globe.png',
+                              height: 200,
+                            ),
+                          ],
+                        ),
+                        Divider(
+                          height: 20,
+                          thickness: 2,
+                        ),
+                        DropdownButton<String>(
+                          value: dropdownValue,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue = newValue;
+                            });
+                          },
+                          items: <String>[
+                            'Indonesia',
+                            'USA',
+                            'Singapore',
+                            'English'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Image.asset(
+                              'assets/img/flag.png',
+                              height: 200,
+                            ),
+                            StatsColumn(
+                              columnTextAlignment: CrossAxisAlignment.end,
+                              statsData: globalData,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Image.asset(
-                      'assets/img/globe.png',
-                      height: 200,
+                  );
+                } else if (snapshot.hasError) {
+                  mainWidget = Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 60,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text('Error: ${snapshot.error}'),
+                      ],
                     ),
-                  ],
-                ),
-                Divider(
-                  height: 20,
-                  thickness: 2,
-                ),
-                DropdownButton<String>(
-                  value: dropdownValue,
-                  icon: Icon(Icons.arrow_drop_down),
-                  iconSize: 24,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      dropdownValue = newValue;
-                    });
-                  },
-                  items: <String>['Indonesia', 'USA', 'Singapore', 'English']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset(
-                      'assets/img/flag.png',
-                      height: 200,
-                    ),
-                    StatsColumn(
-                      columnTextAlignment: CrossAxisAlignment.end,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+                  );
+                } else {
+                  mainWidget = Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return mainWidget;
+              }),
         ),
       ),
     );
@@ -86,8 +127,9 @@ class _StatsPageState extends State<StatsPage> {
 
 class StatsColumn extends StatelessWidget {
   final CrossAxisAlignment columnTextAlignment;
+  final Map statsData;
 
-  StatsColumn({@required this.columnTextAlignment});
+  StatsColumn({@required this.columnTextAlignment, @required this.statsData});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +141,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          '92.291.033',
+          statsData['confirmed'].toString(),
           style: kStatsConfirmedStyle,
         ),
         SizedBox(
@@ -110,7 +152,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          '1.976.509',
+          statsData['deaths'].toString(),
           style: kStatsDeathsStyle,
         ),
         SizedBox(
@@ -121,7 +163,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          '50.947.389',
+          statsData['recovered'].toString(),
           style: kStatsRecoveredStyle,
         ),
       ],
