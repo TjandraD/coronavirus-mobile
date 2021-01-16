@@ -1,6 +1,7 @@
 import 'package:covid19_stats/api_helper.dart';
 import 'package:covid19_stats/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:numeral/numeral.dart';
 
 class StatsPage extends StatefulWidget {
   @override
@@ -141,7 +142,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          statsData['confirmed'].toString(),
+          Numeral(statsData['confirmed']).value(),
           style: kStatsConfirmedStyle,
         ),
         SizedBox(
@@ -152,7 +153,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          statsData['deaths'].toString(),
+          Numeral(statsData['deaths']).value(),
           style: kStatsDeathsStyle,
         ),
         SizedBox(
@@ -163,7 +164,7 @@ class StatsColumn extends StatelessWidget {
           style: kStatsTitleStyle,
         ),
         Text(
-          statsData['recovered'].toString(),
+          Numeral(statsData['recovered']).value(),
           style: kStatsRecoveredStyle,
         ),
       ],
