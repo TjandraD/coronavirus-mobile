@@ -1,4 +1,4 @@
-import 'package:covid19_stats/stats_page.dart';
+import 'package:covid19_stats/screens/stats_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

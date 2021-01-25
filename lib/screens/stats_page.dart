@@ -1,4 +1,4 @@
-import 'package:covid19_stats/api_helper.dart';
+import '../api/api_helper.dart';
 import 'package:covid19_stats/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:numeral/numeral.dart';
