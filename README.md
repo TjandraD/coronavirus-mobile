@@ -15,7 +15,3 @@ Bonus step if you want to build the app
 
 ![App Snippet - 1](https://user-images.githubusercontent.com/46013258/105657985-258f9800-5ef8-11eb-91e7-ee2861e7e1fb.png)
 ![App Snippet - 2](https://user-images.githubusercontent.com/46013258/105657988-27595b80-5ef8-11eb-917f-4e1a9c2836d3.png)
-
-## SDLC Model
-
-In this app, I used Agile development method for the Software Development Life Cycle. The reason for this is because mainly I created the app dinamically, so if there is a minor changes to the app, I can immediately code it right away
